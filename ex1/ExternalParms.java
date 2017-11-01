@@ -1,6 +1,6 @@
 package ex1;
 
-public class WorkItem{
+public class ExternalParms {
     Integer x,y,gen;
     Boolean value;
 }
