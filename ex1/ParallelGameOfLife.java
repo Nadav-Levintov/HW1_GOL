@@ -9,4 +9,16 @@ public class ParallelGameOfLife implements GameOfLife {
 		return null;
 	}
 
+
+	private int numNeighbors(int x,int y, boolean[][] field ){
+		int counter=(field[x][y]?-1:0);
+		for (int i=x-1; i<=x+1;i++ ){
+			if (i<0||i>=field.length){ continue ; }
+			for (int j=y-1; j<=y+1;j++){
+				if (j<0||j>=field[0].length){ continue ; }
+				counter+=(field[i][j]?1:0);
+			}
+		}
+		return counter;
+	}
 }
