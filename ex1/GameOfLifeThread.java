@@ -5,19 +5,19 @@ import javafx.util.Pair;
 import java.util.*;
 
 public class GameOfLifeThread extends Thread {
-    Integer height, width, initialCol, initialRow, generationsToDo, currGen;
-    Cell[][] threadField;
-    Queue<Cell> workQueue = new LinkedList<>();
-    ExternalCellQueue consumerQueue;
-    ExternalCellQueue[][] producerQueues;
-    Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new TreeMap<>();
-    boolean[][][] results;
-    boolean[][] initalField;
+    private Integer height, width, initialCol, initialRow, generationsToDo, currGen;
+    private Cell[][] threadField;
+    private Queue<Cell> workQueue = new LinkedList<>();
+    private ExternalCellQueue consumerQueue;
+    private ExternalCellQueue[][] producerQueues;
+    private Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new TreeMap<>();
+    private  boolean[][][] results;
+    private boolean[][] initalField;
 
 
-    public GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
-                            ExternalCellQueue[][] consumerProducerQueues, Integer gen,
-                            boolean[][] initalField, boolean[][][] results) {
+    GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
+                     ExternalCellQueue[][] consumerProducerQueues, Integer gen,
+                     boolean[][] initalField, boolean[][][] results) {
         this.height = height + 1;
         this.width = width + 1;
         this.initialCol = initialCol;
@@ -47,7 +47,7 @@ public class GameOfLifeThread extends Thread {
 
         if (row == 0 || col == 0 || row == height - 1 || col == width - 1) {
             ExternalCell externalCell = new ExternalCell(currentRow, currentCol, initalField[currentRow][currentCol]);
-            externalCellMap.put(new Pair<Integer, Integer>(currentRow, currentCol), externalCell);
+            externalCellMap.put(new Pair<>(currentRow, currentCol), externalCell);
             return externalCell;
 
         }
