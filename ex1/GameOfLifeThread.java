@@ -70,7 +70,7 @@ public class GameOfLifeThread extends Thread {
                 threadField[row][col] = buildCell(row, col);
             }
         }
-
+        /* creating neighbor list for inner cells only */
         for (int row = 1; row < this.height - 1; row++) {
             for (int col = 1; col < this.width - 1; col++) {
                 generateNeighbourList(row, col);
