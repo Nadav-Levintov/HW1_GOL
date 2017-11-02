@@ -41,7 +41,7 @@ public class GameOfLifeThread extends Thread {
         if (currentRow < 0 || currentCol < 0 || currentRow > initalField.length - 1 ||
                 currentCol > initalField[0].length - 1) {
             /* Out of bounds of original field */
-            return new DeadCell(currentRow,currentCol);
+            return new DeadCell(currentRow, currentCol);
         }
 
 
@@ -68,6 +68,23 @@ public class GameOfLifeThread extends Thread {
         for (int row = 0; row < this.height; row++) {
             for (int col = 0; col < this.width; col++) {
                 threadField[row][col] = buildCell(row, col);
+            }
+        }
+
+        for (int row = 1; row < this.height - 1; row++) {
+            for (int col = 1; col < this.width - 1; col++) {
+                generateNeighbourList(row, col);
+            }
+        }
+        
+    }
+
+    private void generateNeighbourList(int row, int col) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (i != 1 && j != 1) {
+                    threadField[row][col].addNeighbor(threadField[row + i - 1][col + j - 1]);
+                }
             }
         }
     }

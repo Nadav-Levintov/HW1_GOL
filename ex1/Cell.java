@@ -15,4 +15,8 @@ public class Cell {
         this.value = value;
         this.gen = 0;
     }
+
+    public void addNeighbor(Cell c){
+        neighbors.add(c);
+    }
 }
