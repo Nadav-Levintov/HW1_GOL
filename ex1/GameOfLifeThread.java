@@ -41,7 +41,7 @@ public class GameOfLifeThread extends Thread {
         if (currentRow < 0 || currentCol < 0 || currentRow > initalField.length - 1 ||
                 currentCol > initalField[0].length - 1) {
             /* Out of bounds of original field */
-            return null;
+            return new DeadCell(currentRow,currentCol);
         }
 
 
