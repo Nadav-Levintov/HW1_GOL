@@ -3,7 +3,7 @@ package ex1;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cell {
+abstract public class Cell {
     Integer col, row,gen;
     Boolean value, old_value;
     List<Cell> neighbors = new ArrayList<>();
@@ -19,4 +19,6 @@ public class Cell {
     public void addNeighbor(Cell c){
         neighbors.add(c);
     }
+
+    abstract public void updateValue();
 }

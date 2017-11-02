@@ -76,7 +76,7 @@ public class GameOfLifeThread extends Thread {
                 generateNeighbourList(row, col);
             }
         }
-        
+
     }
 
     private void generateNeighbourList(int row, int col) {
