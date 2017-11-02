@@ -34,32 +34,52 @@ public class GameOfLifeThread extends Thread {
         field and the initial value
      */
     private Cell buildCell(int row, int col) {
-        int currentRow, currentCol;
-        currentRow = initialRow + row - 1;
-        currentCol = initialCol + col - 1;
+        int rowInOriginalField, colInOriginalField;
+        rowInOriginalField = initialRow + row - 1;
+        colInOriginalField = initialCol + col - 1;
 
-        if (currentRow < 0 || currentCol < 0 || currentRow > initalField.length - 1 ||
-                currentCol > initalField[0].length - 1) {
+        if (rowInOriginalField < 0 || colInOriginalField < 0 || rowInOriginalField > initalField.length - 1 ||
+                colInOriginalField > initalField[0].length - 1) {
             /* Out of bounds of original field */
-            return new DeadCell(currentRow, currentCol);
+            return new DeadCell(rowInOriginalField, colInOriginalField);
         }
 
 
         if (row == 0 || col == 0 || row == height - 1 || col == width - 1) {
-            ExternalCell externalCell = new ExternalCell(currentRow, currentCol, initalField[currentRow][currentCol]);
-            externalCellMap.put(new Pair<>(currentRow, currentCol), externalCell);
+            ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField]);
+            externalCellMap.put(new Pair<>(rowInOriginalField, colInOriginalField), externalCell);
             return externalCell;
 
         }
 
         if (row == 1 || col == 1 || row == height - 2 || row == width - 2) {
-            List<ExternalCellQueue> neighboursQueues = new ArrayList<>();
-            /* TODO: build neighboursQueues based on row,col & producerQueues */
-            return new BorderCell(currentRow, currentCol, initalField[currentRow][currentCol], neighboursQueues);
+            Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
+            return new BorderCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField], neighboursQueues);
         }
 
-        return new InnerCell(currentRow, currentCol, initalField[currentRow][currentCol]);
+        return new InnerCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField]);
 
+    }
+
+    private Set<ExternalCellQueue> createExternalCellQueues(int row, int col) {
+        Set<ExternalCellQueue> neighboursQueues = new TreeSet<>();
+        if (row == 1 && col == 1)
+            neighboursQueues.add(this.producerQueues[0][0]);
+        if (row == 1)
+            neighboursQueues.add(this.producerQueues[0][1]);
+        if (row == 1 && col == height - 2)
+            neighboursQueues.add(this.producerQueues[0][2]);
+        if (col == 1)
+            neighboursQueues.add(this.producerQueues[1][0]);
+        if (col == height - 2)
+            neighboursQueues.add(this.producerQueues[1][2]);
+        if (row == height - 2 && col == height - 2)
+            neighboursQueues.add(this.producerQueues[2][0]);
+        if (row == height - 2)
+            neighboursQueues.add(this.producerQueues[2][1]);
+        if (row == height - 2 && col == height - 2)
+            neighboursQueues.add(this.producerQueues[2][2]);
+        return neighboursQueues;
     }
 
     @Override

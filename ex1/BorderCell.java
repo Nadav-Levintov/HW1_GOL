@@ -2,15 +2,16 @@ package ex1;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class BorderCell extends InnerCell {
-    List<ExternalCellQueue> neighborBlocksQueue;
+    Set<ExternalCellQueue> externalCellQueues;
     List<InnerCell> blockNeighbors = new ArrayList<>();
 
-    public BorderCell(Integer row, Integer col, Boolean value, List<ExternalCellQueue> neighborBlocksQueue) {
+    public BorderCell(Integer row, Integer col, Boolean value, Set<ExternalCellQueue> externalCellQueues) {
         super(row, col, value);
 
-        this.neighborBlocksQueue = neighborBlocksQueue;
+        this.externalCellQueues = externalCellQueues;
     }
 
     @Override
