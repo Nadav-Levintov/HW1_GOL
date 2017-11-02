@@ -29,10 +29,20 @@ public class ParallelGameOfLife implements GameOfLife {
 
                 threadMatrix[row][col] = new GameOfLifeThread(rowStep, tmpColStep, row * rowStep, col * colStep,
                         currThreadQueueMatrix, generations, initalField, results);
-
+				threadMatrix[row][col].start();
             }
         }
 
+		for (int row = 0; row < vSplit; row++) {
+        	for (int col = 0; col < hSplit; col++) {
+				try {
+					threadMatrix[row][col].join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
         return results;
     }
 
@@ -50,7 +60,6 @@ public class ParallelGameOfLife implements GameOfLife {
                 newMatrix[row][col] = allQueuesMatrix[currRow + row - 1][currCol + col - 1];
             }
         }
-
 
         return newMatrix;
     }
