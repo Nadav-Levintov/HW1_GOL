@@ -18,15 +18,16 @@ public class ParallelGameOfLife implements GameOfLife {
         /* Init threads */
         int rowStep = initalField.length / vSplit;
         int colStep = initalField[0].length / hSplit;
-        for (int i = 0; i < vSplit; i++) {
-            if (i == rowStep - 1) {
+
+        for (int row = 0; row < vSplit; row++) {
+            if (row == rowStep - 1) {
                 rowStep += initalField.length % vSplit;
             }
-            for (int j = 0; j < hSplit; j++) {
-                int tmpColStep = (j == colStep - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
-                ExternalCellQueue[][] currThreadQueueMatrix = buildCellQueueMatrix(i, j, queuesMatrix);
+            for (int col = 0; col < hSplit; col++) {
+                int tmpColStep = (col == colStep - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
+                ExternalCellQueue[][] currThreadQueueMatrix = buildCellQueueMatrix(row, col, queuesMatrix);
 
-                threadMatrix[i][j] = new GameOfLifeThread(rowStep, tmpColStep, i * rowStep, j * colStep,
+                threadMatrix[row][col] = new GameOfLifeThread(rowStep, tmpColStep, row * rowStep, col * colStep,
                         currThreadQueueMatrix, generations, initalField, results);
 
             }
@@ -36,17 +37,17 @@ public class ParallelGameOfLife implements GameOfLife {
     }
 
     /* Build the queues matrix for each thread */
-    private ExternalCellQueue[][] buildCellQueueMatrix(int currI, int currJ, ExternalCellQueue[][] allQueuesMatrix) {
+    private ExternalCellQueue[][] buildCellQueueMatrix(int currRow, int currCol, ExternalCellQueue[][] allQueuesMatrix) {
         final int matrixSize = 3;
         ExternalCellQueue[][] newMatrix = new ExternalCellQueue[matrixSize][matrixSize];
 
-        for (int i = 0; i < matrixSize; i++) {
-            for (int j = 0; j < matrixSize; j++) {
-                if ((currI == 0 && i == 0) || (currI == allQueuesMatrix.length - 1 && i == matrixSize - 1))
+        for (int row = 0; row < matrixSize; row++) {
+            for (int col = 0; col < matrixSize; col++) {
+                if ((currRow == 0 && row == 0) || (currRow == allQueuesMatrix.length - 1 && row == matrixSize - 1))
                     continue;
-                if ((currJ == 0 && j == 0) || (currJ == allQueuesMatrix.length - 1 && j == matrixSize - 1))
+                if ((currCol == 0 && col == 0) || (currCol == allQueuesMatrix.length - 1 && col == matrixSize - 1))
                     continue;
-                newMatrix[i][j] = allQueuesMatrix[currI + i - 1][currJ + j - 1];
+                newMatrix[row][col] = allQueuesMatrix[currRow + row - 1][currCol + col - 1];
             }
         }
 
