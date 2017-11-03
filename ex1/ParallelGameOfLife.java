@@ -10,8 +10,8 @@ public class ParallelGameOfLife implements GameOfLife {
 
         /* Init all queues for all threads */
         int id = 0;
-        for (int i = 0; i < vSplit; i++) {
-            for (int j = 0; j < hSplit; j++) {
+        for (int i = 0; i < hSplit; i++) {
+            for (int j = 0; j < vSplit; j++) {
                 queuesMatrix[i][j] = new ExternalCellQueue(id);
                 id++;
             }
@@ -55,7 +55,7 @@ public class ParallelGameOfLife implements GameOfLife {
             for (int col = 0; col < matrixSize; col++) {
                 if ((currRow == 0 && row == 0) || (currRow == allQueuesMatrix.length - 1 && row == matrixSize - 1))
                     continue;
-                if ((currCol == 0 && col == 0) || (currCol == allQueuesMatrix.length - 1 && col == matrixSize - 1))
+                if ((currCol == 0 && col == 0) || (currCol == allQueuesMatrix[0].length - 1 && col == matrixSize - 1))
                     continue;
                 newMatrix[row][col] = allQueuesMatrix[currRow + row - 1][currCol + col - 1];
             }

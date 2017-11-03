@@ -15,7 +15,8 @@ public class GameOfLifeThread extends Thread {
     private boolean[][] initalField;
     private Integer updatesToDo, updatesDone;
 
-    /*Debug vars */
+    /*Debug vars
+     * TODO: remove before submit */
     private Integer deadCells = 0, innerCells = 0, externalCells = 0, borderCells = 0;
 
     GameOfLifeThread(Integer height, Integer width, Integer initialRow, Integer initialCol,
@@ -38,7 +39,7 @@ public class GameOfLifeThread extends Thread {
     /* Build the correct cell type for the thread field based on location in the thread field, location in the initial
         field and the initial value
      */
-    Cell buildCell(int row, int col) {
+    private Cell buildCell(int row, int col) {
 
         int rowInOriginalField, colInOriginalField;
         rowInOriginalField = initialRow + row - 1;
@@ -110,11 +111,9 @@ public class GameOfLifeThread extends Thread {
                 threadField[row][col] = buildCell(row, col);
             }
         }
-        /* creating neighbor list for inner cells only */
-        int tmp = 0;
+
         for (int row = 0; row < this.height; row++) {
             for (int col = 0; col < this.width; col++) {
-                tmp++;
                 generateNeighbourList(row, col);
                 workQueue.add(threadField[row][col]);
             }

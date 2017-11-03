@@ -4,18 +4,18 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ExternalCellQueue implements Comparable<ExternalCellQueue>{
-    public ExternalCellQueue(Integer id) {
+    ExternalCellQueue(Integer id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    private Integer getId() {
         return id;
     }
 
     private Integer id;
     private Queue<ExternalParams> externalParamsList = new LinkedList<>();
 
-    public synchronized ExternalParams dequeue() {
+    synchronized ExternalParams dequeue() {
         while (externalParamsList.isEmpty()) {
             try {
                 wait();
@@ -24,12 +24,10 @@ public class ExternalCellQueue implements Comparable<ExternalCellQueue>{
             }
         }
 
-        ExternalParams ret = externalParamsList.remove();
-
-        return ret;
+        return externalParamsList.remove();
     }
 
-    public synchronized void enqueue(ExternalParams params) {
+    synchronized void enqueue(ExternalParams params) {
         externalParamsList.add(params);
         notifyAll();
     }

@@ -4,15 +4,15 @@ import java.util.Queue;
 
 public class InnerCell extends Cell {
 
-    public InnerCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
-                     boolean[][][] results) {
+    InnerCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
+              boolean[][][] results) {
         super(row, col, value, threadWorkQueue, generationsToDo, results);
     }
 
     @Override
     public cellUpdateResult updateValue() {
 
-        if (this.gen == this.generationsToDo) {
+        if (this.gen.equals(this.generationsToDo)) {
             return cellUpdateResult.CELL_UPDATE_FAIL;
         }
 
@@ -22,7 +22,7 @@ public class InnerCell extends Cell {
             Integer neighbourGen = neighbour.getGen();
             int neighbourValue = 0;
             /*check that neighbor is not DeadCell and that is in relevant gen */
-            if (neighbourGen > -1 && !(neighbourGen == this.gen || neighbourGen == this.gen + 1))
+            if (neighbourGen > -1 && !(neighbourGen.equals(this.gen) || neighbourGen.equals(this.gen + 1)))
                 return cellUpdateResult.CELL_UPDATE_FAIL;
 
             if (neighbourGen.intValue() == this.gen) {
@@ -50,7 +50,7 @@ public class InnerCell extends Cell {
         if (gen == generationsToDo - 1) {
             results[0][row][col] = value;
         }
-        if (gen == generationsToDo) {
+        if (gen.equals(generationsToDo)) {
             results[1][row][col] = value;
         }
         return cellUpdateResult.CELL_UPDATE_SUCCESS;

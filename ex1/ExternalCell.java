@@ -4,8 +4,8 @@ import java.util.Queue;
 
 public class ExternalCell extends Cell {
 
-    public ExternalCell(Integer row, Integer col, Boolean value,Queue<Cell> threadWorkQueue,Integer generationsToDo,
-                        boolean[][][] results) {
+    ExternalCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
+                 boolean[][][] results) {
         super(row, col, value, threadWorkQueue,generationsToDo,results);
     }
 

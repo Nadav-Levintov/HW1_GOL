@@ -11,22 +11,22 @@ public class ExternalParams {
         return col;
     }
 
-    public Integer getGen() {
+    Integer getGen() {
         return gen;
     }
 
-    public Boolean getValue() {
+    Boolean getValue() {
         return value;
     }
 
-    public Pair<Integer, Integer> getCoordination() {
+    Pair<Integer, Integer> getCoordination() {
         return new Pair<>(row,col);
     }
 
-    Integer row,col,gen;
-    Boolean value;
+    private Integer row,col,gen;
+    private Boolean value;
 
-    public ExternalParams(Integer row, Integer col, Integer gen, Boolean value) {
+    ExternalParams(Integer row, Integer col, Integer gen, Boolean value) {
         this.row = row;
         this.col = col;
         this.gen = gen;

@@ -13,30 +13,30 @@ abstract public class Cell {
     boolean[][][] results;
     Queue<Cell> threadWorkQueue;
 
-    public Boolean getOldValue() {
+    Boolean getOldValue() {
         return oldValue;
     }
 
     Boolean oldValue;
 
-    public List<Cell> getNeighbors() {
+    List<Cell> getNeighbors() {
         return neighbors;
     }
 
     List<Cell> neighbors = new ArrayList<>();
 
-    public Boolean getValue() {
+    Boolean getValue() {
         return value;
     }
 
-    public Integer getGen() {
+    Integer getGen() {
         return gen;
     }
 
 
 
-    public Cell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
-            boolean[][][] results) {
+    Cell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
+         boolean[][][] results) {
         this.col = col;
         this.row = row;
         this.value = value;
@@ -46,7 +46,7 @@ abstract public class Cell {
         this.gen = 0;
     }
 
-    public void addNeighbor(Cell c) {
+    void addNeighbor(Cell c) {
         neighbors.add(c);
     }
 
