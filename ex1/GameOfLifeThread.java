@@ -113,7 +113,7 @@ public class GameOfLifeThread extends Thread {
         }
 
         /*Main work loop */
-        while (updatesDone != updatesToDo) {
+        while (!Objects.equals(updatesDone, updatesToDo)) {
             while (!workQueue.isEmpty()) {
                 /* work while you can */
                 Cell c = workQueue.remove();
@@ -121,7 +121,9 @@ public class GameOfLifeThread extends Thread {
                     updatesDone++;
                 }
             }
-
+            if (Objects.equals(updatesDone, updatesToDo)) {
+                break;
+            }
             /* wait for info from other threads */
             ExternalParams params = consumerQueue.dequeue();
             externalCellMap.get(params.getCoordination()).externalUpdateValue(params.getGen(), params.getValue());
