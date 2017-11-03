@@ -19,8 +19,8 @@ public class ExternalParams {
         return value;
     }
 
-    public Pair getCoordination() {
-        return new Pair(row,col);
+    public Pair<Integer, Integer> getCoordination() {
+        return new Pair<>(row,col);
     }
 
     Integer row,col,gen;

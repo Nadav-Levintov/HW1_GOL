@@ -18,7 +18,7 @@ public class GameOfLifeThread extends Thread {
     /*Debug vars */
     private Integer deadCells = 0, innerCells = 0, externalCells = 0, borderCells = 0;
 
-    GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
+    GameOfLifeThread(Integer height, Integer width, Integer initialRow, Integer initialCol,
                      ExternalCellQueue[][] consumerProducerQueues, Integer gen,
                      boolean[][] initalField, boolean[][][] results) {
         this.height = height + 2;
@@ -61,7 +61,7 @@ public class GameOfLifeThread extends Thread {
 
         }
 
-        if (row == 1 || col == 1 || row == height - 2 || row == width - 2) {
+        if (row == 1 || col == 1 || row == height - 2 || col == width - 2) {
             Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
             borderCells++;
             return new BorderCell(rowInOriginalField, colInOriginalField,
@@ -81,22 +81,22 @@ public class GameOfLifeThread extends Thread {
         if (row == 1 && this.producerQueues[0][1] != null)
             neighboursQueues.add(this.producerQueues[0][1]);
 
-        if (row == 1 && col == height - 2 && this.producerQueues[0][2] != null)
+        if (row == 1 && col == width - 2 && this.producerQueues[0][2] != null)
             neighboursQueues.add(this.producerQueues[0][2]);
 
         if (col == 1 && this.producerQueues[1][0] != null)
             neighboursQueues.add(this.producerQueues[1][0]);
 
-        if (col == height - 2 && this.producerQueues[1][2] != null)
+        if (col == width - 2 && this.producerQueues[1][2] != null)
             neighboursQueues.add(this.producerQueues[1][2]);
 
-        if (row == height - 2 && col == height - 2 && this.producerQueues[2][0] != null)
+        if (row == height - 2 && col == 1 && this.producerQueues[2][0] != null)
             neighboursQueues.add(this.producerQueues[2][0]);
 
         if (row == height - 2 && this.producerQueues[2][1] != null)
             neighboursQueues.add(this.producerQueues[2][1]);
 
-        if (row == height - 2 && col == height - 2 && this.producerQueues[2][2] != null)
+        if (row == height - 2 && col == width - 2 && this.producerQueues[2][2] != null)
             neighboursQueues.add(this.producerQueues[2][2]);
 
         return neighboursQueues;
@@ -112,8 +112,8 @@ public class GameOfLifeThread extends Thread {
         }
         /* creating neighbor list for inner cells only */
         int tmp = 0;
-        for (int row = 1; row < this.height - 1; row++) {
-            for (int col = 1; col < this.width - 1; col++) {
+        for (int row = 0; row < this.height; row++) {
+            for (int col = 0; col < this.width; col++) {
                 tmp++;
                 generateNeighbourList(row, col);
                 workQueue.add(threadField[row][col]);
@@ -135,7 +135,8 @@ public class GameOfLifeThread extends Thread {
             }
             /* wait for info from other threads */
             ExternalParams params = consumerQueue.dequeue();
-            externalCellMap.get(params.getCoordination()).externalUpdateValue(params.getGen(), params.getValue());
+            ExternalCell externalCell = externalCellMap.get(params.getCoordination());
+            externalCell.externalUpdateValue(params.getGen(), params.getValue());
         }
 
     }
@@ -144,6 +145,14 @@ public class GameOfLifeThread extends Thread {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (i == 1 && j == 1) {
+                    continue;
+                }
+                if(row + i - 1 < 0 || row + i - 1>= height)
+                {
+                    continue;
+                }
+                if(col + j - 1 < 0 || col + j - 1>= width)
+                {
                     continue;
                 }
                 threadField[row][col].addNeighbor(threadField[row + i - 1][col + j - 1]);
