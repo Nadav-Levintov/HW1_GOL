@@ -113,7 +113,7 @@ public class GameOfLifeThread extends Thread {
         }
 
         /*Main work loop */
-        while (!Objects.equals(updatesDone, updatesToDo)) {
+        while (!updatesDone.equals(updatesToDo)) {
             while (!workQueue.isEmpty()) {
                 /* work while you can */
                 Cell c = workQueue.remove();
