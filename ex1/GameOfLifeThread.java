@@ -19,8 +19,8 @@ public class GameOfLifeThread extends Thread {
     GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
                      ExternalCellQueue[][] consumerProducerQueues, Integer gen,
                      boolean[][] initalField, boolean[][][] results) {
-        this.height = height + 1;
-        this.width = width + 1;
+        this.height = height + 2;
+        this.width = width + 2;
         this.initialCol = initialCol;
         this.initialRow = initialRow;
         this.producerQueues = consumerProducerQueues;
@@ -93,6 +93,7 @@ public class GameOfLifeThread extends Thread {
 
         if (row == height - 2 && col == height - 2 && this.producerQueues[2][2] != null)
             neighboursQueues.add(this.producerQueues[2][2]);
+
         return neighboursQueues;
     }
 
@@ -105,8 +106,10 @@ public class GameOfLifeThread extends Thread {
             }
         }
         /* creating neighbor list for inner cells only */
+        int tmp=0;
         for (int row = 1; row < this.height - 1; row++) {
             for (int col = 1; col < this.width - 1; col++) {
+                tmp++;
                 generateNeighbourList(row, col);
                 workQueue.add(threadField[row][col]);
             }

@@ -20,14 +20,14 @@ public class ParallelGameOfLife implements GameOfLife {
         int colStep = initalField[0].length / hSplit;
 
         for (int row = 0; row < vSplit; row++) {
-            if (row == rowStep - 1) {
+            if (row == vSplit - 1) {
                 rowStep += initalField.length % vSplit;
             }
             for (int col = 0; col < hSplit; col++) {
-                int tmpColStep = (col == colStep - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
+                int tmpColStep = (col == hSplit - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
                 ExternalCellQueue[][] currThreadQueueMatrix = buildCellQueueMatrix(row, col, queuesMatrix);
 
-                threadMatrix[row][col] = new GameOfLifeThread(rowStep, tmpColStep, row * rowStep, col * colStep,
+                threadMatrix[row][col] = new GameOfLifeThread(rowStep, tmpColStep, row * vSplit, col * hSplit,
                         currThreadQueueMatrix, generations, initalField, results);
 				threadMatrix[row][col].start();
             }
