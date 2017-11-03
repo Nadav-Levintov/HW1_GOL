@@ -11,7 +11,7 @@ public class GameOfLifeThread extends Thread {
     private Queue<Cell> workQueue = new LinkedList<>();
     private ExternalCellQueue consumerQueue;
     private ExternalCellQueue[][] producerQueues;
-    private Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new TreeMap<>();
+    private Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new HashMap<>();
     private boolean[][] initalField;
     private Integer updatesToDo, updatesDone;
 
@@ -30,12 +30,14 @@ public class GameOfLifeThread extends Thread {
         this.results = results;
         this.updatesToDo = generationsToDo * width * height;
         this.updatesDone = 0;
+        this.threadField = new Cell[this.height][this.width];
     }
 
     /* Build the correct cell type for the thread field based on location in the thread field, location in the initial
         field and the initial value
      */
-    private Cell buildCell(int row, int col) {
+    Cell buildCell(int row, int col) {
+
         int rowInOriginalField, colInOriginalField;
         rowInOriginalField = initialRow + row - 1;
         colInOriginalField = initialCol + col - 1;
@@ -68,21 +70,28 @@ public class GameOfLifeThread extends Thread {
 
     private Set<ExternalCellQueue> createExternalCellQueues(int row, int col) {
         Set<ExternalCellQueue> neighboursQueues = new TreeSet<>();
-        if (row == 1 && col == 1)
+        if (row == 1 && col == 1 && this.producerQueues[0][0] != null)
             neighboursQueues.add(this.producerQueues[0][0]);
-        if (row == 1)
+
+        if (row == 1 && this.producerQueues[0][1] != null)
             neighboursQueues.add(this.producerQueues[0][1]);
-        if (row == 1 && col == height - 2)
+
+        if (row == 1 && col == height - 2 && this.producerQueues[0][2] != null)
             neighboursQueues.add(this.producerQueues[0][2]);
-        if (col == 1)
+
+        if (col == 1 && this.producerQueues[1][0] != null)
             neighboursQueues.add(this.producerQueues[1][0]);
-        if (col == height - 2)
+
+        if (col == height - 2 && this.producerQueues[1][2] != null)
             neighboursQueues.add(this.producerQueues[1][2]);
-        if (row == height - 2 && col == height - 2)
+
+        if (row == height - 2 && col == height - 2 && this.producerQueues[2][0] != null)
             neighboursQueues.add(this.producerQueues[2][0]);
-        if (row == height - 2)
+
+        if (row == height - 2 && this.producerQueues[2][1] != null)
             neighboursQueues.add(this.producerQueues[2][1]);
-        if (row == height - 2 && col == height - 2)
+
+        if (row == height - 2 && col == height - 2 && this.producerQueues[2][2] != null)
             neighboursQueues.add(this.producerQueues[2][2]);
         return neighboursQueues;
     }
