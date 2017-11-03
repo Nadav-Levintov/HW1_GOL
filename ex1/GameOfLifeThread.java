@@ -121,7 +121,8 @@ public class GameOfLifeThread extends Thread {
                     updatesDone++;
                 }
             }
-            if (Objects.equals(updatesDone, updatesToDo)) {
+
+            if (updatesDone.equals(updatesToDo)) {
                 break;
             }
             /* wait for info from other threads */
