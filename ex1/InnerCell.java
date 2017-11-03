@@ -12,7 +12,7 @@ public class InnerCell extends Cell {
     @Override
     public cellUpdateResult updateValue() {
 
-        if (this.gen == this.generationsToDo - 1) {
+        if (this.gen == this.generationsToDo) {
             return cellUpdateResult.CELL_UPDATE_FAIL;
         }
 

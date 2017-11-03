@@ -11,7 +11,7 @@ public class ParallelGameOfLife implements GameOfLife {
         /* Init all queues for all threads */
         for (int i = 0; i < vSplit; i++) {
             for (int j = 0; j < hSplit; j++) {
-                queuesMatrix[i][j] = new ExternalCellQueue();
+                queuesMatrix[i][j] = new ExternalCellQueue(i+j);
             }
         }
 

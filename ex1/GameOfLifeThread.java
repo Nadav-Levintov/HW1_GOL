@@ -15,6 +15,8 @@ public class GameOfLifeThread extends Thread {
     private boolean[][] initalField;
     private Integer updatesToDo, updatesDone;
 
+    /*Debug vars */
+    private Integer deadCells = 0, innerCells = 0, externalCells = 0, borderCells = 0;
 
     GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
                      ExternalCellQueue[][] consumerProducerQueues, Integer gen,
@@ -45,6 +47,7 @@ public class GameOfLifeThread extends Thread {
         if (rowInOriginalField < 0 || colInOriginalField < 0 || rowInOriginalField > initalField.length - 1 ||
                 colInOriginalField > initalField[0].length - 1) {
             /* Out of bounds of original field */
+            deadCells++;
             return new DeadCell(rowInOriginalField, colInOriginalField);
         }
 
@@ -53,16 +56,18 @@ public class GameOfLifeThread extends Thread {
             ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField,
                     initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
             externalCellMap.put(new Pair<>(rowInOriginalField, colInOriginalField), externalCell);
+            externalCells++;
             return externalCell;
 
         }
 
         if (row == 1 || col == 1 || row == height - 2 || row == width - 2) {
             Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
+            borderCells++;
             return new BorderCell(rowInOriginalField, colInOriginalField,
                     initalField[rowInOriginalField][colInOriginalField], workQueue, neighboursQueues, generationsToDo, results);
         }
-
+        innerCells++;
         return new InnerCell(rowInOriginalField, colInOriginalField,
                 initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
 
@@ -106,7 +111,7 @@ public class GameOfLifeThread extends Thread {
             }
         }
         /* creating neighbor list for inner cells only */
-        int tmp=0;
+        int tmp = 0;
         for (int row = 1; row < this.height - 1; row++) {
             for (int col = 1; col < this.width - 1; col++) {
                 tmp++;
