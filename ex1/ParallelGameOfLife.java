@@ -9,7 +9,7 @@ public class ParallelGameOfLife implements GameOfLife {
         boolean[][][] results = new boolean[2][initalField.length][initalField[0].length];
 
         /* Init all queues for all threads */
-        int id=0;
+        int id = 0;
         for (int i = 0; i < vSplit; i++) {
             for (int j = 0; j < hSplit; j++) {
                 queuesMatrix[i][j] = new ExternalCellQueue(id);
@@ -22,29 +22,27 @@ public class ParallelGameOfLife implements GameOfLife {
         int colStep = initalField[0].length / hSplit;
 
         for (int row = 0; row < vSplit; row++) {
-            if (row == vSplit - 1) {
-                rowStep += initalField.length % vSplit;
-            }
             for (int col = 0; col < hSplit; col++) {
-                int tmpColStep = (col == hSplit - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
+                int height = (row == vSplit - 1) ? rowStep + (initalField.length % vSplit) : rowStep;
+                int width = (col == hSplit - 1) ? colStep + (initalField[0].length % hSplit) : colStep;
                 ExternalCellQueue[][] currThreadQueueMatrix = buildCellQueueMatrix(row, col, queuesMatrix);
 
-                threadMatrix[row][col] = new GameOfLifeThread(rowStep, tmpColStep, row * rowStep,
+                threadMatrix[row][col] = new GameOfLifeThread(height, width, row * rowStep,
                         col * colStep, currThreadQueueMatrix, generations, initalField, results);
-				threadMatrix[row][col].start();
+                threadMatrix[row][col].start();
             }
         }
 
-		for (int row = 0; row < vSplit; row++) {
-        	for (int col = 0; col < hSplit; col++) {
-				try {
-					threadMatrix[row][col].join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
+        for (int row = 0; row < vSplit; row++) {
+            for (int col = 0; col < hSplit; col++) {
+                try {
+                    threadMatrix[row][col].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return results;
     }
 
