@@ -2,18 +2,27 @@ package ex1;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 abstract public class Cell {
     Integer col;
     Integer row;
     Integer gen;
     Boolean value;
+    Integer generationsToDo;
+    boolean[][][] results;
+    Queue<Cell> threadWorkQueue;
 
     public Boolean getOldValue() {
         return oldValue;
     }
 
     Boolean oldValue;
+
+    public List<Cell> getNeighbors() {
+        return neighbors;
+    }
+
     List<Cell> neighbors = new ArrayList<>();
 
     public Boolean getValue() {
@@ -26,10 +35,14 @@ abstract public class Cell {
 
 
 
-    public Cell(Integer row, Integer col, Boolean value) {
+    public Cell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
+            boolean[][][] results) {
         this.col = col;
         this.row = row;
         this.value = value;
+        this.threadWorkQueue = threadWorkQueue;
+        this.generationsToDo = generationsToDo;
+        this.results = results;
         this.gen = 0;
     }
 

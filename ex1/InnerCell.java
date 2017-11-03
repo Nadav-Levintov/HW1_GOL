@@ -1,9 +1,12 @@
 package ex1;
 
+import java.util.Queue;
+
 public class InnerCell extends Cell {
 
-    public InnerCell(Integer row, Integer col, Boolean value) {
-        super(row, col, value);
+    public InnerCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue,Integer generationsToDo,
+                     boolean[][][] results) {
+        super(row, col, value, threadWorkQueue,generationsToDo,results);
     }
 
     @Override
@@ -38,6 +41,16 @@ public class InnerCell extends Cell {
             value = Boolean.FALSE;
         }
 
+        threadWorkQueue.addAll(this.getNeighbors());
+
+        if(gen == generationsToDo-1 )
+        {
+            results[0][row][col]=value;
+        }
+        if(gen == generationsToDo )
+        {
+            results[1][row][col]=value;
+        }
         return cellUpdateResult.CELL_UPDATE_SUCCESS;
     }
 }

@@ -6,7 +6,7 @@ public class ParallelGameOfLife implements GameOfLife {
                                 int generations) {
         GameOfLifeThread[][] threadMatrix = new GameOfLifeThread[hSplit][vSplit];
         ExternalCellQueue[][] queuesMatrix = new ExternalCellQueue[hSplit][vSplit];
-        boolean[][][] results = new boolean[2][][];
+        boolean[][][] results = new boolean[2][initalField.length][initalField[0].length];
 
         /* Init all queues for all threads */
         for (int i = 0; i < vSplit; i++) {

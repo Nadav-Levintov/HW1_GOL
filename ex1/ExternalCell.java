@@ -1,17 +1,24 @@
 package ex1;
 
+import java.util.Queue;
+
 public class ExternalCell extends Cell {
-    public ExternalCell(Integer row, Integer col, Boolean value) {
-        super(row, col, value);
+
+    public ExternalCell(Integer row, Integer col, Boolean value,Queue<Cell> threadWorkQueue,Integer generationsToDo,
+                        boolean[][][] results) {
+        super(row, col, value, threadWorkQueue,generationsToDo,results);
     }
 
     @Override
     public cellUpdateResult updateValue() {
-        return cellUpdateResult.CELL_UPDATE_SUCCESS;
+        return cellUpdateResult.CELL_UPDATE_FAIL;
     }
 
-    public cellUpdateResult externalUpdateValue() {
-        /*TODO: use this function to update the cell when update is available from another thread */
-        return cellUpdateResult.CELL_UPDATE_SUCCESS;
+    public void externalUpdateValue(int gen, Boolean value) {
+        this.oldValue = this.value;
+        this.value=value;
+        this.gen = gen;
+
+        threadWorkQueue.addAll(this.getNeighbors());
     }
 }

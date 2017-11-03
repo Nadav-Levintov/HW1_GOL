@@ -5,14 +5,15 @@ import javafx.util.Pair;
 import java.util.*;
 
 public class GameOfLifeThread extends Thread {
-    private Integer height, width, initialCol, initialRow, generationsToDo, currGen;
+    private final boolean[][][] results;
+    private Integer height, width, initialCol, initialRow, generationsToDo;
     private Cell[][] threadField;
     private Queue<Cell> workQueue = new LinkedList<>();
     private ExternalCellQueue consumerQueue;
     private ExternalCellQueue[][] producerQueues;
     private Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new TreeMap<>();
-    private  boolean[][][] results;
     private boolean[][] initalField;
+    private Integer updatesToDo, updatesDone;
 
 
     GameOfLifeThread(Integer height, Integer width, Integer initialCol, Integer initialRow,
@@ -26,8 +27,9 @@ public class GameOfLifeThread extends Thread {
         this.consumerQueue = consumerProducerQueues[1][1];
         this.generationsToDo = gen;
         this.initalField = initalField;
-        this.currGen = 0;
         this.results = results;
+        this.updatesToDo = generationsToDo * width * height;
+        this.updatesDone = 0;
     }
 
     /* Build the correct cell type for the thread field based on location in the thread field, location in the initial
@@ -46,7 +48,8 @@ public class GameOfLifeThread extends Thread {
 
 
         if (row == 0 || col == 0 || row == height - 1 || col == width - 1) {
-            ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField]);
+            ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField,
+                    initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
             externalCellMap.put(new Pair<>(rowInOriginalField, colInOriginalField), externalCell);
             return externalCell;
 
@@ -54,10 +57,12 @@ public class GameOfLifeThread extends Thread {
 
         if (row == 1 || col == 1 || row == height - 2 || row == width - 2) {
             Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
-            return new BorderCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField], neighboursQueues);
+            return new BorderCell(rowInOriginalField, colInOriginalField,
+                    initalField[rowInOriginalField][colInOriginalField], workQueue, neighboursQueues, generationsToDo, results);
         }
 
-        return new InnerCell(rowInOriginalField, colInOriginalField, initalField[rowInOriginalField][colInOriginalField]);
+        return new InnerCell(rowInOriginalField, colInOriginalField,
+                initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
 
     }
 
@@ -94,7 +99,23 @@ public class GameOfLifeThread extends Thread {
         for (int row = 1; row < this.height - 1; row++) {
             for (int col = 1; col < this.width - 1; col++) {
                 generateNeighbourList(row, col);
+                workQueue.add(threadField[row][col]);
             }
+        }
+
+        /*Main work loop */
+        while (updatesDone != updatesToDo) {
+            while (!workQueue.isEmpty()) {
+                /* work while you can */
+                Cell c = workQueue.remove();
+                if (c.updateValue().equals(cellUpdateResult.CELL_UPDATE_SUCCESS)) {
+                    updatesDone++;
+                }
+            }
+
+            /* wait for info from other threads */
+            ExternalParams params = consumerQueue.dequeue();
+            externalCellMap.get(params.getCoordination()).externalUpdateValue(params.getGen(), params.getValue());
         }
 
     }

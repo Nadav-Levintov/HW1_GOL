@@ -2,14 +2,15 @@ package ex1;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 public class BorderCell extends InnerCell {
-    Set<ExternalCellQueue> externalCellQueues;
-    List<InnerCell> blockNeighbors = new ArrayList<>();
+    private Set<ExternalCellQueue> externalCellQueues;
 
-    public BorderCell(Integer row, Integer col, Boolean value, Set<ExternalCellQueue> externalCellQueues) {
-        super(row, col, value);
+    BorderCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue,
+               Set<ExternalCellQueue> externalCellQueues, Integer generationsToDo, boolean[][][] results) {
+        super(row, col, value, threadWorkQueue, generationsToDo, results);
 
         this.externalCellQueues = externalCellQueues;
     }
@@ -18,8 +19,16 @@ public class BorderCell extends InnerCell {
     public cellUpdateResult updateValue() {
         cellUpdateResult updateResult = super.updateValue();
         if (updateResult.equals(cellUpdateResult.CELL_UPDATE_SUCCESS)) {
-            /* TODO: produce to the relevent neighbours queue */
+            produceToNeighbours();
         }
         return updateResult;
+    }
+
+    private void produceToNeighbours() {
+        ExternalParams params = new ExternalParams(row, col, gen, value);
+        for (ExternalCellQueue q : externalCellQueues
+                ) {
+            q.enqueue(params);
+        }
     }
 }
