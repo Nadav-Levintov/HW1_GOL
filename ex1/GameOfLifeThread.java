@@ -135,9 +135,10 @@ public class GameOfLifeThread extends Thread {
     private void generateNeighbourList(int row, int col) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (i != 1 && j != 1) {
-                    threadField[row][col].addNeighbor(threadField[row + i - 1][col + j - 1]);
+                if (i == 1 && j == 1) {
+                    continue;
                 }
+                threadField[row][col].addNeighbor(threadField[row + i - 1][col + j - 1]);
             }
         }
     }
