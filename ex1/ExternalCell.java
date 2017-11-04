@@ -6,7 +6,7 @@ public class ExternalCell extends Cell {
 
     ExternalCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
                  boolean[][][] results) {
-        super(row, col, value, threadWorkQueue,generationsToDo,results);
+        super(row,col, value, threadWorkQueue,generationsToDo,results);
     }
 
     @Override
@@ -19,6 +19,6 @@ public class ExternalCell extends Cell {
         this.value=value;
         this.gen = gen;
 
-        threadWorkQueue.addAll(this.getNeighbors());
+        addNeighborsToQueue();
     }
 }

@@ -45,9 +45,9 @@ public class InnerCell extends Cell {
             value = Boolean.FALSE;
         }
 
-        threadWorkQueue.addAll(this.getNeighbors());
+        addNeighborsToQueue();
 
-        if (gen == generationsToDo - 1) {
+        if (gen.equals(generationsToDo - 1)) {
             results[0][row][col] = value;
         }
         if (gen.equals(generationsToDo)) {

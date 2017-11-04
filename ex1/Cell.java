@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-abstract public class Cell {
+abstract public class Cell{
+
     Integer col;
     Integer row;
     Integer gen;
     Boolean value;
     Integer generationsToDo;
     boolean[][][] results;
-    Queue<Cell> threadWorkQueue;
+    private Queue<Cell> threadWorkQueue;
 
     Boolean getOldValue() {
         return oldValue;
@@ -51,6 +52,17 @@ abstract public class Cell {
     }
 
     abstract public cellUpdateResult updateValue();
+
+    void addNeighborsToQueue() {
+        for (Cell neighbor :
+                neighbors) {
+            /* add all cells that can now continue to the workQueue*/
+            if (this.gen.equals(neighbor.getGen()) || this.gen.equals(neighbor.getGen()+1))
+            {
+                threadWorkQueue.add(neighbor);
+            }
+        }
+    }
 }
 
 enum cellUpdateResult {

@@ -1,7 +1,7 @@
 package ex1;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExternalCellQueue implements Comparable<ExternalCellQueue>{
     ExternalCellQueue(Integer id) {
@@ -13,9 +13,9 @@ public class ExternalCellQueue implements Comparable<ExternalCellQueue>{
     }
 
     private Integer id;
-    private Queue<ExternalParams> externalParamsList = new LinkedList<>();
+    private List<ExternalParams> externalParamsList = new ArrayList<>();
 
-    synchronized ExternalParams dequeue() {
+    synchronized List<ExternalParams> dequeue() {
         while (externalParamsList.isEmpty()) {
             try {
                 wait();
@@ -23,8 +23,9 @@ public class ExternalCellQueue implements Comparable<ExternalCellQueue>{
                 e.printStackTrace();
             }
         }
-
-        return externalParamsList.remove();
+        List<ExternalParams> ret = externalParamsList;
+        externalParamsList=new ArrayList<>();
+        return ret;
     }
 
     synchronized void enqueue(ExternalParams params) {

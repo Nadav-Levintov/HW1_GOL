@@ -12,6 +12,8 @@ public class GameOfLifeThread extends Thread {
     private Map<Map.Entry<Integer, Integer>, ExternalCell> externalCellMap = new HashMap<>();
     private boolean[][] initialField;
     private Integer updatesToDo, updatesDone;
+    private List<InnerCell> innerCells = new ArrayList<>();
+    private List<BorderCell> borderCells = new ArrayList<>();
 
     GameOfLifeThread(Integer height, Integer width, Integer initialRow, Integer initialCol,
                      ExternalCellQueue[][] consumerProducerQueues, Integer gen,
@@ -49,18 +51,22 @@ public class GameOfLifeThread extends Thread {
         if (row == 0 || col == 0 || row == height - 1 || col == width - 1) {
             ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField,
                     initialField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
-            externalCellMap.put(new AbstractMap.SimpleEntry<>(rowInOriginalField,colInOriginalField), externalCell);
+            externalCellMap.put(new AbstractMap.SimpleEntry<>(rowInOriginalField, colInOriginalField), externalCell);
             return externalCell;
 
         }
 
         if (row == 1 || col == 1 || row == height - 2 || col == width - 2) {
             Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
-            return new BorderCell(rowInOriginalField, colInOriginalField,
+            BorderCell borderCell = new BorderCell(rowInOriginalField, colInOriginalField,
                     initialField[rowInOriginalField][colInOriginalField], workQueue, neighboursQueues, generationsToDo, results);
+            borderCells.add(borderCell);
+            return borderCell;
         }
-        return new InnerCell(rowInOriginalField, colInOriginalField,
+        InnerCell innerCell = new InnerCell(rowInOriginalField, colInOriginalField,
                 initialField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
+        innerCells.add(innerCell);
+        return innerCell;
 
     }
 
@@ -105,16 +111,18 @@ public class GameOfLifeThread extends Thread {
         for (int row = 0; row < this.height; row++) {
             for (int col = 0; col < this.width; col++) {
                 generateNeighbourList(row, col);
-                if(row ==0 || col ==0 || row == height-1 || col == width-1)
-                    continue;
-                workQueue.add(threadField[row][col]);
             }
         }
 
+        workQueue.addAll(borderCells);
+        workQueue.addAll(innerCells);
+
         /*Main work loop */
+        int workDone = 0;
         while (!updatesDone.equals(updatesToDo)) {
             while (!workQueue.isEmpty()) {
                 /* work while you can */
+                workDone++;
                 Cell c = workQueue.remove();
                 if (c.updateValue().equals(cellUpdateResult.CELL_UPDATE_SUCCESS)) {
                     updatesDone++;
@@ -125,12 +133,16 @@ public class GameOfLifeThread extends Thread {
                 break;
             }
             /* wait for info from other threads */
-            ExternalParams params = consumerQueue.dequeue();
-            Map.Entry coordination = params.getCoordination();
-            ExternalCell externalCell = externalCellMap.get(coordination);
-            externalCell.externalUpdateValue(params.getGen(), params.getValue());
-        }
+            List<ExternalParams> params = consumerQueue.dequeue();
+            for (ExternalParams externalParams :
+                    params) {
+                Map.Entry coordination = externalParams.getCoordination();
+                ExternalCell externalCell = externalCellMap.get(coordination);
+                externalCell.externalUpdateValue(externalParams.getGen(), externalParams.getValue());
+            }
 
+        }
+        workDone += 0;
     }
 
     private void generateNeighbourList(int row, int col) {
@@ -139,12 +151,10 @@ public class GameOfLifeThread extends Thread {
                 if (i == 1 && j == 1) {
                     continue;
                 }
-                if(row + i - 1 < 0 || row + i - 1>= height)
-                {
+                if (row + i - 1 < 0 || row + i - 1 >= height) {
                     continue;
                 }
-                if(col + j - 1 < 0 || col + j - 1>= width)
-                {
+                if (col + j - 1 < 0 || col + j - 1 >= width) {
                     continue;
                 }
                 threadField[row][col].addNeighbor(threadField[row + i - 1][col + j - 1]);
