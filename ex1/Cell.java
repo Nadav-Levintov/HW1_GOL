@@ -10,7 +10,7 @@ abstract public class Cell {
     Boolean value;
 
     boolean[][][] results;
-    private Queue<Cell> threadWorkQueue;
+    Queue<Cell> threadWorkQueue;
 
     Boolean getOldValue() {
         return oldValue;
@@ -50,14 +50,13 @@ abstract public class Cell {
 
     abstract public cellUpdateResult updateValue();
 
+    abstract public void addToWorkQueue(Integer genOfAdderCell);
+
     void addNeighborsToQueue() {
         for (Cell neighbor :
                 neighbors) {
             /* add all cells that can now continue to the workQueue*/
-            final Integer gen = neighbor.getGen();
-            if (gen >=0 &&(this.gen.equals(gen) || this.gen.equals(gen + 1))) {
-                threadWorkQueue.add(neighbor);
-            }
+            neighbor.addToWorkQueue(this.gen);
         }
     }
 

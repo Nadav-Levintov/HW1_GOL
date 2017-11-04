@@ -55,4 +55,11 @@ public class InnerCell extends Cell {
         }
         return cellUpdateResult.CELL_UPDATE_SUCCESS;
     }
+
+    @Override
+    public void addToWorkQueue(Integer genOfAdderCell) {
+        if (genOfAdderCell.equals(gen) || genOfAdderCell.equals(gen + 1)) {
+            threadWorkQueue.add(this);
+        }
+    }
 }

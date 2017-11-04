@@ -14,6 +14,11 @@ public class ExternalCell extends Cell {
         return cellUpdateResult.CELL_UPDATE_FAIL;
     }
 
+    @Override
+    public void addToWorkQueue(Integer genOfAdderCell) {
+        /*void*/
+    }
+
     public void externalUpdateValue(int gen, Boolean value) {
         this.oldValue = this.value;
         this.value=value;
