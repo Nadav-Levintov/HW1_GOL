@@ -119,7 +119,6 @@ public class GameOfLifeThread extends Thread {
         workQueue.add(threadField[1][1]);
 
         /*Main work loop */
-        //TODO: remove.
         while (!updatesDone.equals(updatesToDo)) {
             while (!workQueue.isEmpty()) {
                 /* work while you can */
