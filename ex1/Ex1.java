@@ -48,8 +48,8 @@ public class Ex1 {
 
         long tEnd = System.currentTimeMillis();
         long tDelta = tEnd - tStart;
-        Double elapsedSeconds = tDelta / 1000.0;
-        System.out.println("Serial time: ".concat(elapsedSeconds.toString()));
+        Double serialElapsedSeconds = tDelta / 1000.0;
+        System.out.println("Serial time: ".concat(serialElapsedSeconds.toString()));
 
         //printArray(resultSerial);
         try {
@@ -66,8 +66,10 @@ public class Ex1 {
 
         tEnd = System.currentTimeMillis();
         tDelta = tEnd - tStart;
-        elapsedSeconds = tDelta / 1000.0;
-        System.out.println("Parallel time: ".concat(elapsedSeconds.toString()));
+        Double parallelElapsedSeconds = tDelta / 1000.0;
+        System.out.println("Parallel time: ".concat(parallelElapsedSeconds.toString()));
+        Double speedup = serialElapsedSeconds/parallelElapsedSeconds;
+        System.out.println("Speedup: ".concat(speedup.toString()));
 
         if (compareArrays(resultParallel[0], resultSerial[0]) && compareArrays(resultParallel[1], resultSerial[1])) {
             System.out.println("Success!");
