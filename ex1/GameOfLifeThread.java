@@ -1,7 +1,5 @@
 package ex1;
 
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class GameOfLifeThread extends Thread {
@@ -11,17 +9,13 @@ public class GameOfLifeThread extends Thread {
     private Queue<Cell> workQueue = new LinkedList<>();
     private ExternalCellQueue consumerQueue;
     private ExternalCellQueue[][] producerQueues;
-    private Map<Pair<Integer, Integer>, ExternalCell> externalCellMap = new HashMap<>();
-    private boolean[][] initalField;
+    private Map<Map.Entry<Integer, Integer>, ExternalCell> externalCellMap = new HashMap<>();
+    private boolean[][] initialField;
     private Integer updatesToDo, updatesDone;
-
-    /*Debug vars
-     * TODO: remove before submit */
-    private Integer deadCells = 0, innerCells = 0, externalCells = 0, borderCells = 0;
 
     GameOfLifeThread(Integer height, Integer width, Integer initialRow, Integer initialCol,
                      ExternalCellQueue[][] consumerProducerQueues, Integer gen,
-                     boolean[][] initalField, boolean[][][] results) {
+                     boolean[][] initialField, boolean[][][] results) {
         this.height = height + 2;
         this.width = width + 2;
         this.initialCol = initialCol;
@@ -29,7 +23,7 @@ public class GameOfLifeThread extends Thread {
         this.producerQueues = consumerProducerQueues;
         this.consumerQueue = consumerProducerQueues[1][1];
         this.generationsToDo = gen;
-        this.initalField = initalField;
+        this.initialField = initialField;
         this.results = results;
         this.updatesToDo = generationsToDo * width * height;
         this.updatesDone = 0;
@@ -45,32 +39,28 @@ public class GameOfLifeThread extends Thread {
         rowInOriginalField = initialRow + row - 1;
         colInOriginalField = initialCol + col - 1;
 
-        if (rowInOriginalField < 0 || colInOriginalField < 0 || rowInOriginalField > initalField.length - 1 ||
-                colInOriginalField > initalField[0].length - 1) {
+        if (rowInOriginalField < 0 || colInOriginalField < 0 || rowInOriginalField > initialField.length - 1 ||
+                colInOriginalField > initialField[0].length - 1) {
             /* Out of bounds of original field */
-            deadCells++;
             return new DeadCell(rowInOriginalField, colInOriginalField);
         }
 
 
         if (row == 0 || col == 0 || row == height - 1 || col == width - 1) {
             ExternalCell externalCell = new ExternalCell(rowInOriginalField, colInOriginalField,
-                    initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
-            externalCellMap.put(new Pair<>(rowInOriginalField, colInOriginalField), externalCell);
-            externalCells++;
+                    initialField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
+            externalCellMap.put(new AbstractMap.SimpleEntry<>(rowInOriginalField,colInOriginalField), externalCell);
             return externalCell;
 
         }
 
         if (row == 1 || col == 1 || row == height - 2 || col == width - 2) {
             Set<ExternalCellQueue> neighboursQueues = createExternalCellQueues(row, col);
-            borderCells++;
             return new BorderCell(rowInOriginalField, colInOriginalField,
-                    initalField[rowInOriginalField][colInOriginalField], workQueue, neighboursQueues, generationsToDo, results);
+                    initialField[rowInOriginalField][colInOriginalField], workQueue, neighboursQueues, generationsToDo, results);
         }
-        innerCells++;
         return new InnerCell(rowInOriginalField, colInOriginalField,
-                initalField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
+                initialField[rowInOriginalField][colInOriginalField], workQueue, generationsToDo, results);
 
     }
 
@@ -115,6 +105,8 @@ public class GameOfLifeThread extends Thread {
         for (int row = 0; row < this.height; row++) {
             for (int col = 0; col < this.width; col++) {
                 generateNeighbourList(row, col);
+                if(row ==0 || col ==0 || row == height-1 || col == width-1)
+                    continue;
                 workQueue.add(threadField[row][col]);
             }
         }
@@ -134,7 +126,8 @@ public class GameOfLifeThread extends Thread {
             }
             /* wait for info from other threads */
             ExternalParams params = consumerQueue.dequeue();
-            ExternalCell externalCell = externalCellMap.get(params.getCoordination());
+            Map.Entry coordination = params.getCoordination();
+            ExternalCell externalCell = externalCellMap.get(coordination);
             externalCell.externalUpdateValue(params.getGen(), params.getValue());
         }
 

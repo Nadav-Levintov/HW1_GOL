@@ -1,6 +1,7 @@
 package ex1;
 
-import javafx.util.Pair;
+import java.util.AbstractMap;
+import java.util.Map;
 
 public class ExternalParams {
     public Integer getRow() {
@@ -19,11 +20,12 @@ public class ExternalParams {
         return value;
     }
 
-    Pair<Integer, Integer> getCoordination() {
-        return new Pair<>(row,col);
+
+    Map.Entry getCoordination() {
+        return new AbstractMap.SimpleEntry(row,col);
     }
 
-    private Integer row,col,gen;
+    private Integer row, col, gen;
     private Boolean value;
 
     ExternalParams(Integer row, Integer col, Integer gen, Boolean value) {
