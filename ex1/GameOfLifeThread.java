@@ -114,15 +114,15 @@ public class GameOfLifeThread extends Thread {
             }
         }
 
-        workQueue.addAll(borderCells);
-        workQueue.addAll(innerCells);
+        //workQueue.addAll(borderCells);
+        //workQueue.addAll(innerCells);
+        workQueue.add(threadField[1][1]);
 
         /*Main work loop */
-        int workDone = 0;
+        //TODO: remove.
         while (!updatesDone.equals(updatesToDo)) {
             while (!workQueue.isEmpty()) {
                 /* work while you can */
-                workDone++;
                 Cell c = workQueue.remove();
                 if (c.updateValue().equals(cellUpdateResult.CELL_UPDATE_SUCCESS)) {
                     updatesDone++;
@@ -142,7 +142,6 @@ public class GameOfLifeThread extends Thread {
             }
 
         }
-        workDone += 0;
     }
 
     private void generateNeighbourList(int row, int col) {

@@ -6,7 +6,7 @@ public class InnerCell extends Cell {
 
     InnerCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
               boolean[][][] results) {
-        super(row, col, value, threadWorkQueue, generationsToDo, results);
+        super(row,col, value, threadWorkQueue, generationsToDo, results);
     }
 
     @Override

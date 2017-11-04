@@ -8,7 +8,7 @@ public class BorderCell extends InnerCell {
 
     BorderCell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue,
                Set<ExternalCellQueue> externalCellQueues, Integer generationsToDo, boolean[][][] results) {
-        super(row, col, value, threadWorkQueue, generationsToDo, results);
+        super(row,col, value, threadWorkQueue, generationsToDo, results);
 
         this.externalCellQueues = externalCellQueues;
     }
