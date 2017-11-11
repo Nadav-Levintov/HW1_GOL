@@ -4,6 +4,10 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 public class ExternalParams {
+    /* used as workItems for the P-C queues */
+    private Integer row, col, gen;
+    private Boolean value;
+
     public Integer getRow() {
         return row;
     }
@@ -21,12 +25,9 @@ public class ExternalParams {
     }
 
 
-    Map.Entry getCoordination() {
-        return new AbstractMap.SimpleEntry(row,col);
+    Map.Entry<Integer, Integer> getCoordination() {
+        return new AbstractMap.SimpleEntry<>(row,col);
     }
-
-    private Integer row, col, gen;
-    private Boolean value;
 
     ExternalParams(Integer row, Integer col, Integer gen, Boolean value) {
         this.row = row;

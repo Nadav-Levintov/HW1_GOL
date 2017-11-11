@@ -11,19 +11,22 @@ public class ExternalCell extends Cell {
 
     @Override
     public cellUpdateResult updateValue() {
+        /* external cells are updated externally, the thread does not work on them */
         return cellUpdateResult.CELL_UPDATE_FAIL;
     }
 
     @Override
     public void addToWorkQueue(Integer genOfAdderCell) {
-        /*void*/
+        /* The thread does not work on external cells so we don't add them to the queue*/
     }
 
     public void externalUpdateValue(int gen, Boolean value) {
+        /* updated externally from ExternalParams received from other thread through the P-C queue */
         this.oldValue = this.value;
         this.value=value;
         this.gen = gen;
 
+        /* add all relevent cells (border cells) to the thread work queue */
         addNeighborsToQueue();
     }
 }

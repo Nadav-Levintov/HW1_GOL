@@ -9,6 +9,6 @@ public class DeadCell extends ExternalCell {
 
     @Override
     public void externalUpdateValue(int gen, Boolean value) {
-        /* does nothing */
+        /* does nothing because DeadCells stay dead*/
     }
 }

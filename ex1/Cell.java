@@ -7,31 +7,23 @@ import java.util.Queue;
 abstract public class Cell {
 
     Integer col, row, gen, generationsToDo;
-    Boolean value;
-
+    Boolean value,oldValue;
     boolean[][][] results;
     Queue<Cell> threadWorkQueue;
+    List<Cell> neighbors = new ArrayList<>();
 
     Boolean getOldValue() {
         return oldValue;
     }
-
-    Boolean oldValue;
-
     List<Cell> getNeighbors() {
         return neighbors;
     }
-
-    List<Cell> neighbors = new ArrayList<>();
-
     Boolean getValue() {
         return value;
     }
-
     Integer getGen() {
         return gen;
     }
-
 
     Cell(Integer row, Integer col, Boolean value, Queue<Cell> threadWorkQueue, Integer generationsToDo,
          boolean[][][] results) {
@@ -64,5 +56,5 @@ abstract public class Cell {
 
 enum cellUpdateResult {
     CELL_UPDATE_SUCCESS,
-    CELL_UPDATE_FAIL;
+    CELL_UPDATE_FAIL
 }
